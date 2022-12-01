@@ -1,0 +1,21 @@
+name: Branch Rolling Release
+on:
+  push:
+    branches: [ '*' ]
+
+jobs:
+  rolling_release:
+    runs-on: ubuntu-latest
+    name: Rolling Release on Branch
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Release
+        uses: nicovince/manage-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: README.md
+          sha1: ${{ github.sha }}
