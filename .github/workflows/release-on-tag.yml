@@ -1,0 +1,22 @@
+name: Release Creation on Tag
+on:
+  push:
+    tags: [ '*' ]
+
+jobs:
+  release_on_tag:
+    runs-on: ubuntu-latest
+    name: Release Creation on Tag Push
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Release
+        uses: nicovince/manage-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: README.md
+          tag: ${{ github.ref_name }}
+          body: "Creation of release after ${{ github.ref_name }} tag has been pushed to repository."
