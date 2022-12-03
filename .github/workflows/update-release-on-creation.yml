@@ -28,4 +28,3 @@ jobs:
           files: README.md
           release: ${{ steps.get-rel-name.outputs.release_name }}
           tag: ${{ github.ref_name }}
-          body: "Upload to existing release"
