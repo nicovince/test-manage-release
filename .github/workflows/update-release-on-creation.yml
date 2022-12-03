@@ -1,0 +1,31 @@
+name: Upload Artifacts on Release Creation
+on:
+  release:
+    types: [created]
+
+jobs:
+  upload_on_release:
+    runs-on: ubuntu-latest
+    name: Upload artifacts when Release is Created
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get Release Name
+        id: get-rel-name
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "release_name=$(gh release view ${{ github.ref_name }} --json 'name' -q '.[]')" >> $GITHUB_OUTPUT
+
+      - name: Update Release
+        uses: nicovince/manage-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: README.md
+          release: ${{ steps.get-rel-name.outputs.release_name }}
+          tag: ${{ github.ref_name }}
+          body: "Upload to existing release"
